@@ -7,20 +7,28 @@ jobs:
   test:
     name: Run test suite
     runs-on: ubuntu-latest
-    # env:
-    #   COMPOSE_FILE: docker-compose.yml
-    #   DOCKER_USER: ${{ secrets.DOCKER_USER }}
-    #   DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+    container:
+      image: node
 
     steps:
     - name: Checkout NodeJS App
       uses: actions/checkout@v2
-
-    - name: Login to DockerHub
-      run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-
-    - name: Build docker images
+    
+    - name: Setup NodeJS On Worker Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18.0'
+    
+    - name: Install & Test
       run: |
-        echo ---Building and starting up docker---
-        docker-compose -f ./ciwithgithub/docker-compose.yml -p testing up -d
-        echo ---Containers up---
+        npm install
+        npm test
+
+    # - name: Login to DockerHub
+    #   run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+    # - name: Build docker images
+    #   run: |
+    #     echo ---Building and starting up docker---
+    #     docker-compose -f ./ciwithgithub/docker-compose.yml -p testing up -d
+    #     echo ---Containers up---
