@@ -8,7 +8,7 @@ jobs:
     name: Run test suite
     runs-on: ubuntu-latest
     env:
-      COMPOSE_FILE: .ci/docker-compose.yml
+      COMPOSE_FILE: docker-compose.yml
       DOCKER_USER: ${{ secrets.DOCKER_USER }}
       DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 
@@ -18,7 +18,7 @@ jobs:
 
     - name: Login to DockerHub
       run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      
+
     - name: Build docker images
       run: docker-compose build
 
