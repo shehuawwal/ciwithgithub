@@ -7,10 +7,10 @@ jobs:
   test:
     name: Run test suite
     runs-on: ubuntu-latest
-    env:
-      COMPOSE_FILE: docker-compose.yml
-      DOCKER_USER: ${{ secrets.DOCKER_USER }}
-      DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+    # env:
+    #   COMPOSE_FILE: docker-compose.yml
+    #   DOCKER_USER: ${{ secrets.DOCKER_USER }}
+    #   DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 
     steps:
     - name: Checkout NodeJS App
@@ -20,7 +20,7 @@ jobs:
       run: docker login -u $DOCKER_USER -p $DOCKER_PASS
 
     - name: Build docker images
-      run: docker-compose build
-
-    - name: Run tests
-      run: docker-compose run test
+      run: |
+        echo ---Building and starting up docker---
+        docker-compose -f ./ciwithgithub/docker-compose.yml -p testing up -d
+        echo ---Containers up---
