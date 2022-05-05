@@ -1,32 +1,13 @@
-name: NodeJS Application Build
+name: Push To DockerHub
 
 on:
-  - push
+  pull_request:
+    types: [ closed ]
 
 jobs:
-  test:
-    name: Run test suite
-    runs-on: ubuntu-latest
-    container:
-      image: node
-
-    steps:
-    - name: Checkout NodeJS App
-      uses: actions/checkout@v2
-    
-    - name: Setup NodeJS On Worker Node
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18.0'
-    
-    - name: Install & Test
-      run: |
-        npm install
-        npm test
-
   build:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    needs: test
 
     steps:
       - name: Checkout The Repo
@@ -37,9 +18,8 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: shehuawwal/nodejs-app
-  
+
       - name: Login to DockerHub
-        if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USER }}
@@ -49,6 +29,5 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
