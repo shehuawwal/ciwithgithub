@@ -29,7 +29,8 @@ jobs:
       - name: Build and Push Image
         run: |
           docker login --username=$DOCKER_USER --password=$DOCKER_PASSWORD
-          docker push shehuawwal/nodejs-app:latest
+          docker build -t nodejs-app:latest .
+          docker push shehuawwal/nodejs-app:latest 
       
       # - name: Build and push
       #   uses: docker/build-push-action@v2
